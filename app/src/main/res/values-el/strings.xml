@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="menu_language">Γλώσσα</string>
+    <string name="menu_color">Χρώμα</string>
     <string name="secret_mode">Μυστική Λειτουργία</string>
     <string name="use_shizuku">Χρήση Shizuku</string>
     <string name="use_sak">Χρήση βεβαίωσης Knox</string>
@@ -16,7 +17,7 @@
     <string name="rkp_test">Τεστ RKP</string>
     <string name="reset">Επαναφορά</string>
     <string name="load_certs">Φόρτωση από αρχείο</string>
-    <string name="save_certs">Αποθήκευση στο αρχείο</string>
+    <string name="save_certs">Αποθήκευση σε αρχείο</string>
     <string name="about">Σχετικά με</string>
     <string name="open_source_info">Αυτό το λογισμικό είναι ανοιχτού κώδικα κάτω από %2$s (%1$s).</string>
     <string name="install_shizuku">Εγκατάσταση Shizuku για χρήση βεβαίωσης αναγνωριστικού (%s).</string>
@@ -46,8 +47,8 @@
     <string name="cert_chain_description">Η αλυσίδα πιστοποιητικών είναι μια λίστα πιστοποιητικών που χρησιμοποιούνται για τον έλεγχο ταυτότητας ενός κλειδιού. Η αλυσίδα ξεκινά με το πιστοποιητικό που σχετίζεται με αυτό το κλειδί και κάθε πιστοποιητικό υπογράφεται από τον επόμενο στην αλυσίδα. Η αλυσίδα τελειώνει με πιστοποιητικό ρίζας και η αξιοπιστία της βεβαίωσης εξαρτάται από το πιστοποιητικό ρίζας της αλυσίδας.</string>
     <string name="cert_info">Πληροφορίες πιστοποιητικού</string>
     <string name="cert_subject">θέμα: </string>
-    <string name="cert_not_before">όχι πριν: </string>
-    <string name="cert_not_after">όχι μετά: </string>
+    <string name="cert_not_before">από: </string>
+    <string name="cert_not_after">έως: </string>
     <string name="cert_error_sign">σφάλμα υπογραφής: </string>
     <string name="cert_error_revoked">ανακλήθηκε: </string>
     <string name="cert_error_expired">έληξε: </string>
@@ -81,18 +82,18 @@
     </string>
     <string name="error_out_of_keys_transient">Προς το παρόν, δεν υπάρχουν κλειδιά που παρέχονται εξ αποστάσεως για βεβαίωση</string>
     <string name="error_out_of_keys_transient_summary">
-    Η ομάδα κλειδιού έχει εξαντληθεί. Δοκιμάστε ξανά μετά τη δικτύωση.
+    Η ομάδα κλειδιού έχει εξαντληθεί. Δοκιμάστε ξανά με σύνδεση στο διαδίκτυο.
     Εάν ο διακομιστής αρνείται προσωρινά να εκδώσει κλειδιά, ελέγξτε για ενημερώσεις συστήματος.
     </string>
     <string name="error_unavailable_transient">Αυτήν τη στιγμή δεν είναι δυνατή η βεβαίωση</string>
     <string name="error_unavailable_transient_summary">
-    Το πρόβλημα είναι προσωρινό. Προσαρμόστε τις επιλογές στο μενού ή δοκιμάστε ξανά αργότερα.
+    Το πρόβλημα είναι προσωρινό. Προσαρμόστε τις επιλογές στο μενού και δοκιμάστε ξανά.
     </string>
     <string name="error_keys_not_provisioned">Χωρίς κλειδιά βεβαίωσης</string>
     <string name="error_keys_not_provisioned_summary">
     Δεν είναι δυνατή η ανάκτηση κλειδιών βεβαίωσης που παρέχονται από απόσταση και δεν υπάρχουν κλειδιά βεβαίωσης που παρέχονται από το εργοστάσιο.
     </string>
-    <string name="error_remote_key_provisioning">Σφάλμα Παροχής Απομακρυσμένου Κλειδιού</string>
+    <string name="error_remote_key_provisioning">Σφάλμα παροχής απομακρυσμένου κλειδιού</string>
     <string name="error_remote_key_provisioning_summary">
     Δεν είναι δυνατή η ανάκτηση της βεβαίωσης κλειδιού από τον διακομιστή παροχής κλειδιών.
     </string>
@@ -174,19 +175,19 @@
     <string name="copied_verifiedBootHash_to_clipboard">Το verifiedBootHash αντιγράφηκε στο πρόχειρο!</string>
     <string name="authorization_list_osVersion">Έκδοση OS</string>
     <string name="authorization_list_osPatchLevel">Επίπεδο ενημέρωσης κώδικα OS</string>
-    <string name="authorization_list_attestationApplicationId">αναγνωριστικό εφαρμογής</string>
-    <string name="authorization_list_attestationIdBrand">μάρκα</string>
-    <string name="authorization_list_attestationIdDevice">συσκευή</string>
-    <string name="authorization_list_attestationIdProduct">προϊόν</string>
-    <string name="authorization_list_attestationIdSerial">σειριακός</string>
+    <string name="authorization_list_attestationApplicationId">Αναγνωριστικό Εφαρμογής</string>
+    <string name="authorization_list_attestationIdBrand">Μάρκα</string>
+    <string name="authorization_list_attestationIdDevice">Συσκευή</string>
+    <string name="authorization_list_attestationIdProduct">Προϊόν</string>
+    <string name="authorization_list_attestationIdSerial">Σειριακός</string>
     <string name="authorization_list_attestationIdImei">IMEI</string>
-    <string name="authorization_list_attestationIdSecondImei">δεύτερο IMEI</string>
+    <string name="authorization_list_attestationIdSecondImei">Δεύτερο IMEI</string>
     <string name="authorization_list_attestationIdMeid">MEID</string>
-    <string name="authorization_list_attestationIdManufacturer">κατασκευαστής</string>
-    <string name="authorization_list_attestationIdModel">μοντέλο</string>
+    <string name="authorization_list_attestationIdManufacturer">Κατασκευαστής</string>
+    <string name="authorization_list_attestationIdModel">Μοντέλο</string>
     <string name="authorization_list_vendorPatchLevel">Επίπεδο ενημέρωσης κώδικα Vendor</string>
     <string name="authorization_list_bootPatchLevel">Επίπεδο ενημέρωσης κώδικα Boot</string>
-    <string name="authorization_list_mgfDigest">Σύνοψη Rsa Oaep Mgf</string>
+    <string name="authorization_list_mgfDigest">Σύνοψη RSA-OAEP MGF</string>
     <string name="authorization_list_earlyBootOnly">Πρόωρη εκκίνηση μόνο</string>
     <string name="authorization_list_usageCountLimit">Όριο πλήθους χρήσης</string>
     <string name="authorization_list_deviceUniqueAttestation">Μοναδική βεβαίωση συσκευής</string>

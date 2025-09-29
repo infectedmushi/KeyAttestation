@@ -31,6 +31,7 @@ import io.github.vvb2060.keyattestation.keystore.KeyStoreManager
 import io.github.vvb2060.keyattestation.lang.AttestationException
 import io.github.vvb2060.keyattestation.repository.AttestationData
 import io.github.vvb2060.keyattestation.util.Status
+import io.github.vvb2060.keyattestation.util.ColorManager
 import io.github.vvb2060.keyattestation.util.LocaleManager
 import rikka.html.text.HtmlCompat
 import rikka.html.text.toHtml
@@ -222,10 +223,13 @@ class HomeFragment : AppFragment(), HomeAdapter.Listener, MenuProvider {
         val status = !item.isChecked
         item.isChecked = status
         when (item.itemId) {
-            R.id.menu_language -> { // Handle the new language menu item
-                LocaleManager.showLanguagePickerDialog(requireContext()) {
-                    requireActivity().recreate()
-                }
+            R.id.menu_language -> {
+                LocaleManager.showLanguagePickerDialog(requireContext())
+                return true
+            }
+			
+            R.id.menu_color -> {
+                ColorManager.showColorPickerDialog(requireActivity())
                 return true
             }
 		

@@ -1,69 +1,63 @@
 package io.github.vvb2060.keyattestation.util
 
+import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import io.github.vvb2060.keyattestation.R
 import java.util.Locale
 
 object LocaleManager {
 
-    fun getAvailableLocales(): List<Locale> {
-        return listOf(
-            Locale("en"),
-            Locale("el"),
-            Locale("pt", "BR"),
-            Locale("uk", "UA"),
-            Locale("zh", "CN"),
-            Locale("zh", "TW")
-        )
-    }
+    private val supportedLocales = listOf(
+        Locale("en"),
+        Locale("el"),
+        Locale("pt", "BR"),
+        Locale("uk", "UA"),
+        Locale("zh", "CN"),
+        Locale("zh", "TW")
+    )
 
-    fun getLocaleCodes(): List<String> {
-        return getAvailableLocales().map { locale ->
-            if (locale.country.isNullOrEmpty()) {
-                locale.language
-            } else {
-                "${locale.language}-${locale.country}"
-            }
-        }
+    fun getLocaleCodes() = listOf("") + supportedLocales.map {
+        if (it.country.isEmpty()) it.language else "${it.language}-${it.country}"
     }
 
     fun getLocaleDisplayNames(context: Context): List<String> {
-        val currentLocale = AppCompatDelegate.getApplicationLocales()[0] ?: Locale.getDefault()
-        return getAvailableLocales().map { locale ->
-            locale.getDisplayName(currentLocale).replaceFirstChar { it.uppercaseChar() }
-        }
+        val sys = Resources.getSystem().configuration.locales[0]
+        val app = AppCompatDelegate.getApplicationLocales()[0] ?: sys
+        return listOf(sys.getDisplayName(sys)) + supportedLocales.map { it.getDisplayName(app) }
+            .map { it.replaceFirstChar { c -> c.uppercaseChar() } }
     }
 
-    fun setLocale(languageCode: String) {
-        val locale = Locale.forLanguageTag(languageCode)
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(locale))
-    }
-
-    fun saveLocale(context: Context, languageCode: String) {
+    fun updateLocale(context: Context, code: String): String {
         context.getSharedPreferences("locale_prefs", Context.MODE_PRIVATE)
-            .edit()
-            .putString("app_locale", languageCode)
-            .apply()
+            .edit().putString("app_locale", code).apply()
+        AppCompatDelegate.setApplicationLocales(
+            if (code.isEmpty()) LocaleListCompat.getEmptyLocaleList()
+            else LocaleListCompat.create(Locale.forLanguageTag(code))
+        )
+        return code
     }
 
-    fun loadLocale(context: Context) {
-        val langCode = context.getSharedPreferences("locale_prefs", Context.MODE_PRIVATE)
-            .getString("app_locale", null)
-        langCode?.let { setLocale(it) }
+    fun loadLocale(context: Context): String {
+        val code = context.getSharedPreferences("locale_prefs", Context.MODE_PRIVATE)
+            .getString("app_locale", "") ?: ""
+        return updateLocale(context, code)
     }
 
-    fun showLanguagePickerDialog(context: Context, onLanguageSelected: () -> Unit) {
-        val languages = getLocaleDisplayNames(context)
+    fun showLanguagePickerDialog(context: Context, onLanguageSelected: () -> Unit = {}) {
         val languageCodes = getLocaleCodes()
+        val languages = getLocaleDisplayNames(context)
+        val currentIndex = languageCodes.indexOf(loadLocale(context)).coerceAtLeast(0)
 
         AlertDialog.Builder(context)
-            .setItems(languages.toTypedArray()) { dialog, which ->
-                setLocale(languageCodes[which])
-                saveLocale(context, languageCodes[which])
-                onLanguageSelected()
+            .setTitle(R.string.menu_language)
+            .setSingleChoiceItems(languages.toTypedArray(), currentIndex) { dialog, which ->
+                updateLocale(context, languageCodes[which])
                 dialog.dismiss()
+                if (context is Activity) context.recreate()
             }
             .show()
     }
