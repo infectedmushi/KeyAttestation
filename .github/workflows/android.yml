@@ -1,4 +1,4 @@
-jobs:
+steps:
   - name: Check out
     uses: actions/checkout@v4
     with:
@@ -9,6 +9,46 @@ jobs:
     with:
       distribution: 'temurin'
       java-version: '21'
+
+  - name: Install Android SDK (Linux / macOS)
+    if: runner.os != 'Windows'
+    run: |
+      ANDROID_SDK_ROOT="$HOME/Android/Sdk"
+      mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
+      if [ "$(uname)" = "Darwin" ]; then
+        CLI_ZIP="commandlinetools-mac-9477386_latest.zip"
+      else
+        CLI_ZIP="commandlinetools-linux-9477386_latest.zip"
+      fi
+      curl -sSL "https://dl.google.com/android/repository/$CLI_ZIP" -o cmdline-tools.zip
+      unzip -q cmdline-tools.zip -d "$ANDROID_SDK_ROOT/cmdline-tools"
+      # Move extracted folder to "latest" (sdkmanager expects cmdline-tools/latest)
+      mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest" || true
+      export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH"
+      yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" "platform-tools" "platforms;android-33" "build-tools;33.0.0"
+      yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses
+      echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+      echo "$ANDROID_SDK_ROOT/platform-tools" >> $GITHUB_PATH
+      echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> $GITHUB_PATH
+
+  - name: Install Android SDK (Windows)
+    if: runner.os == 'Windows'
+    shell: pwsh
+    run: |
+      $env:ANDROID_SDK_ROOT = "$env:USERPROFILE\Android\Sdk"
+      New-Item -ItemType Directory -Force -Path "$env:ANDROID_SDK_ROOT\cmdline-tools" | Out-Null
+      $url = "https://dl.google.com/android/repository/commandlinetools-win-9477386_latest.zip"
+      $zip = "cmdline-tools.zip"
+      Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $zip
+      Expand-Archive -Path $zip -DestinationPath "$env:ANDROID_SDK_ROOT\cmdline-tools"
+      Move-Item -Force "$env:ANDROID_SDK_ROOT\cmdline-tools\cmdline-tools" "$env:ANDROID_SDK_ROOT\cmdline-tools\latest"
+      $sdkmanager = "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat"
+      & $sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.1"
+      # Accept licenses
+      yes | & $sdkmanager --licenses
+      Add-Content -Path $env:GITHUB_ENV -Value "ANDROID_SDK_ROOT=$env:ANDROID_SDK_ROOT"
+      Add-Content -Path $env:GITHUB_PATH -Value "$env:ANDROID_SDK_ROOT\platform-tools"
+      Add-Content -Path $env:GITHUB_PATH -Value "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin"
 
   - name: Make gradlew executable (Unix/macOS only)
     if: runner.os != 'Windows'
@@ -25,11 +65,11 @@ jobs:
 
   - name: Build (Windows)
     if: runner.os == 'Windows'
-    run: .\gradlew.bat assemble
     shell: pwsh
+    run: .\gradlew.bat assemble
 
   - name: Upload build artifact
     uses: actions/upload-artifact@v4
     with:
       name: ${{ matrix.os }}-artifact
-      path: app/build/outputs
+      path: app/build/outputs35.0.1
