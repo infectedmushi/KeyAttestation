@@ -46,7 +46,7 @@ jobs:
           echo "$ANDROID_SDK_ROOT/platform-tools" >> $GITHUB_PATH
           echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> $GITHUB_PATH
 
-      - name: Install Android SDK (Windows)
+        - name: Install Android SDK (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
@@ -59,7 +59,8 @@ jobs:
           Move-Item -Force "$env:ANDROID_SDK_ROOT\cmdline-tools\cmdline-tools" "$env:ANDROID_SDK_ROOT\cmdline-tools\latest"
           $sdkmanager = "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat"
           & $sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
-          yes | & $sdkmanager --licenses
+          # Accept licenses non-interactively (emit many 'y' lines)
+          1..30 | ForEach-Object { 'y' } | & $sdkmanager --licenses
           Add-Content -Path $env:GITHUB_ENV -Value "ANDROID_SDK_ROOT=$env:ANDROID_SDK_ROOT"
           Add-Content -Path $env:GITHUB_PATH -Value "$env:ANDROID_SDK_ROOT\platform-tools"
           Add-Content -Path $env:GITHUB_PATH -Value "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin"
